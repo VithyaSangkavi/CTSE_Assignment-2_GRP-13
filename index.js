@@ -1,0 +1,26 @@
+const express = require("express");
+const bodyParser = require("body-parser");
+const mongoose = require("mongoose");
+const productRouter = require("./Route/Product");
+require("dotenv").config();
+
+const app = express();
+const port = 3000;
+
+app.use(bodyParser.json({ limit: "30mb", extended: true }));
+app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
+
+mongoose
+  .connect(process.env.MONGODB_URI)
+  .then(() => {
+    console.log("Connection to MongoDB successful");
+    app.listen(port, () => {
+      console.log(`Server is running on ${port}`);
+    });
+  })
+  .catch((err) => {
+    console.log(err.message);
+  });
+
+/* Routes */
+app.use("/api/Product", productRouter);
